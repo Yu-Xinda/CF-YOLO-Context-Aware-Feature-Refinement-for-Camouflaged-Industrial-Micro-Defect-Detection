@@ -1,32 +1,59 @@
-from ultralytics import YOLO
-import cv2
-import os
+"""Evaluate or run inference with a trained CF-YOLO checkpoint."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
 
 
-weights_path = 'C:\ultralytics-main\ultralytics\weights\best.pt' 
-source_path = 'C:\ultralytics-main\ultralytics\test_image.jpg' 
-save_dir = 'C:\ultralytics-main\predict_result'
-
-def run_inference():
-
-    if not os.path.exists(weights_path):
-        print(f"ERROR:Couldn't find {weights_path}")
-        return
+ROOT = Path(__file__).resolve().parent
+DEFAULT_DATA = ROOT / "ultralytics/cfg/datasets/defect.yaml"
 
 
-    print(f"Loading Model: {weights_path}...")
-    model = YOLO(weights_path)
-    results = model.predict(
-        source=source_path,
-        save=True,
-        project=os.path.dirname(save_dir), 
-        name=os.path.basename(save_dir),   
-        conf=0.5,  #
-        iou=0.45,
-        exist_ok=True 
-    )
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Validate CF-YOLO or run prediction on images/videos.")
+    parser.add_argument("--weights", required=True, help="Path to trained weights, e.g. runs/detect/cf_yolo_ctdd/weights/best.pt.")
+    parser.add_argument("--data", default=str(DEFAULT_DATA), help="Dataset YAML path for validation.")
+    parser.add_argument("--source", default=None, help="Optional image/video/folder source for prediction mode.")
+    parser.add_argument("--imgsz", type=int, default=640, help="Input image size.")
+    parser.add_argument("--batch", type=int, default=16, help="Validation batch size.")
+    parser.add_argument("--device", default="0", help="CUDA device id or 'cpu'.")
+    parser.add_argument("--conf", type=float, default=0.25, help="Prediction confidence threshold.")
+    parser.add_argument("--iou", type=float, default=0.45, help="Prediction IoU threshold.")
+    parser.add_argument("--project", default=str(ROOT / "runs/detect"), help="Output directory.")
+    parser.add_argument("--name", default="cf_yolo_eval", help="Run name.")
+    return parser.parse_args()
 
-    print(f"\nSave the result in {os.path.join(os.path.dirname(save_dir), os.path.basename(save_dir))}")
 
-if __name__ == '__main__':
-    run_inference()
+def main() -> None:
+    args = parse_args()
+
+    from ultralytics import YOLO
+
+    model = YOLO(args.weights)
+
+    if args.source:
+        model.predict(
+            source=args.source,
+            imgsz=args.imgsz,
+            device=args.device,
+            conf=args.conf,
+            iou=args.iou,
+            save=True,
+            project=args.project,
+            name=args.name,
+            exist_ok=True,
+        )
+    else:
+        model.val(
+            data=args.data,
+            imgsz=args.imgsz,
+            batch=args.batch,
+            device=args.device,
+            project=args.project,
+            name=args.name,
+        )
+
+
+if __name__ == "__main__":
+    main()

@@ -1,29 +1,12 @@
-# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+# CTDD dataset configuration for CF-YOLO.
+#
+# Update `path` to the local CTDD root after receiving or preparing the dataset.
+# The expected structure is documented in DATASET.md.
 
-# COCO 2017 dataset https://cocodataset.org by Microsoft
-# Documentation: https://docs.ultralytics.com/datasets/detect/coco/
-# Example usage: yolo train data=coco.yaml
-# parent
-# ├── ultralytics
-# └── datasets
-#     └── coco ← downloads here (20.1 GB)
+path: data/CTDD
+train: images/train
+val: images/val
+test: images/test
 
-# train: /public/home/gaoyuncan2024/yxd/large_device/data/dataset/images/train # train images (relative to 'path') 3717 images
-# val: /public/home/gaoyuncan2024/yxd/large_device/data/dataset/images/val # val images (relative to 'path') 112 images
-# test: /public/home/gaoyuncan2024/yxd/large_device/data/dataset/images/test # test images (optional)
-
-train: /data/CTDD/images/train # train images (relative to 'path') 3717 images
-val: /data/CTDD/images/val # val images (relative to 'path') 112 images
-test: /data/CTDD/images/test # test images (optional)
-# train:
-#   - /public/home/gaoyuncan2024/yxd/large_device/data/new_0926/0926/images/train
-#   - /public/home/gaoyuncan2024/yxd/large_device/data/new_0926/0926/side_face/images/train
-# val: 
-#   - /public/home/gaoyuncan2024/yxd/large_device/data/new_0926/0926/images/val # val images (relative to 'path') 112 images
-#   - /public/home/gaoyuncan2024/yxd/large_device/data/new_0926/0926/side_face/images/val
-# test: 
-#   - /public/home/gaoyuncan2024/yxd/large_device/data/new_0926/0926/images/test # test images
-#   - /public/home/gaoyuncan2024/yxd/large_device/data/new_0926/0926/side_face/images/test
-# Classes
 names:
   0: defect

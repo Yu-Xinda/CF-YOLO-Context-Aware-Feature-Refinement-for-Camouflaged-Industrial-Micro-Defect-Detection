@@ -1,0 +1,13 @@
+# NEU-DET single-class configuration used for external validation.
+#
+# Convert the six original NEU-DET defect categories into one YOLO class:
+#   0 defect
+# Then update `path` to the converted NEU-DET root.
+
+path: data/NEU-DET-single
+train: images/train
+val: images/val
+test: images/test
+
+names:
+  0: defect
